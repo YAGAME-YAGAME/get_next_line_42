@@ -6,7 +6,7 @@
 /*   By: otzarwal <otzarwal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 21:38:12 by otzarwal          #+#    #+#             */
-/*   Updated: 2024/11/10 22:44:27 by otzarwal         ###   ########.fr       */
+/*   Updated: 2024/11/10 23:22:20 by otzarwal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,21 @@
 #include "get_next_line.h"
 
 
-void	add_back(t_list *list, char *s)
+void	add_back(t_list **list, char *s)
 {
 	t_list *new, *last;
 
-	last = list;
+	new = malloc(sizeof(t_list));
+
+
+	last = *list;
 	if(last == NULL)
-		last = new;
+		*list = new;
 	else
 	{
 		while(last->next != NULL)
 			last = last->next;
-		last = new;
+		last->next = new;
 	}
 	new->content = s;
 	new->next = NULL;
@@ -42,6 +45,7 @@ t_list *get_line(int fd, t_list **list)
 	int n =1;
 	while(n)
 	{
+		// printf("done");
 		buff = malloc(BUFFER_SIZE + 1);
 		if (!buff)
 			return NULL;
@@ -54,8 +58,9 @@ t_list *get_line(int fd, t_list **list)
 			return NULL;
 		}
 		buff[read_char] = '\0';
-
-		add_back(*list, buff);
+		add_back(list, buff);
+		printf("%p\n", *list);
+		printf("%p\n", list);
 	}
 	return (*list);
 }
@@ -64,11 +69,14 @@ t_list *get_line(int fd, t_list **list)
 char *get_next_line(int fd)
 {
 	static t_list *list;
+	t_list *test;
 
 	list = NULL;
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	list = get_line(fd, &list);
+
+	// printf("%s\n",list->content);
 
 	return ("otmane");
 }
