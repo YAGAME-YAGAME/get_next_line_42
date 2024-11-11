@@ -6,14 +6,14 @@
 /*   By: otzarwal <otzarwal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 15:12:34 by otzarwal          #+#    #+#             */
-/*   Updated: 2024/11/10 21:36:39 by otzarwal         ###   ########.fr       */
+/*   Updated: 2024/11/11 19:09:29 by otzarwal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 #define GET_NEXT_LINE_H
 
-#define BUFFER_SIZE 10
+#define BUFFER_SIZE 50
 
 typedef struct s_list{
 	char *content;
@@ -25,7 +25,13 @@ typedef struct s_list{
 #include <fcntl.h>
 #include <unistd.h>
 
-void	ft_lstadd_back(t_list **lst, t_list *new);
+
+int ft_strchr(char *s, char c);
+char	*ft_strdup(const char *s1);
+size_t	ft_strlen(const char *s);
+size_t	ft_strlcpy(char *dst, const char *src, size_t size);
+char	*ft_strjoin(char const *s1, char const *s2);
+// size_t	ft_strlcat(char *dst, const char *src, size_t size);
 
 
 #endif

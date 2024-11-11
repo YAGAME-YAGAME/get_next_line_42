@@ -6,7 +6,7 @@
 /*   By: otzarwal <otzarwal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 21:38:12 by otzarwal          #+#    #+#             */
-/*   Updated: 2024/11/10 23:22:20 by otzarwal         ###   ########.fr       */
+/*   Updated: 2024/11/11 21:41:58 by otzarwal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,71 +14,81 @@
 #include "get_next_line.h"
 
 
-void	add_back(t_list **list, char *s)
+char *get_line(int fd, char *hold)
 {
-	t_list *new, *last;
-
-	new = malloc(sizeof(t_list));
-
-
-	last = *list;
-	if(last == NULL)
-		*list = new;
-	else
-	{
-		while(last->next != NULL)
-			last = last->next;
-		last->next = new;
-	}
-	new->content = s;
-	new->next = NULL;
-
-}
-
-
-
-t_list *get_line(int fd, t_list **list)
-{
+	char *buff;
+	char *line;
 	int read_char;
 
-	char *buff;
-	int n =1;
-	while(n)
+	read_char = 1;
+	while(read_char > 0)
 	{
-		// printf("done");
 		buff = malloc(BUFFER_SIZE + 1);
 		if (!buff)
-			return NULL;
-
-		read_char = read(fd, buff , BUFFER_SIZE);
-		if (read_char <= 0)
 		{
-			free(buff);
-			n = 0;
-			return NULL;
+			free (hold);
+			hold = NULL;
+			return (NULL);
 		}
-		buff[read_char] = '\0';
-		add_back(list, buff);
-		printf("%p\n", *list);
-		printf("%p\n", list);
+		read_char = read(fd, buff, BUFFER_SIZE);
+
+		hold = (ft_strjoin(hold, buff));
+		if (ft_strchr(hold, '\n'))
+			return (hold);
+
 	}
-	return (*list);
+	return (NULL);
 }
 
 
+char *check_newline(char *line)
+{
+	char *wline;
+	int i;
+	int j;
+
+	j  = 0;
+	i = 0;
+	while(line[i])
+	{
+		if (line[i] == '\n')
+		{
+			i++;
+			while(j < i)
+			{
+				wline[j] = line[j];
+				j++;
+			}
+			wline[j] = '\0';
+			wline = ft_strdup(wline);
+			// printf("%s\n",wline);
+
+			return (wline);
+		}
+		i++;
+	}
+	return (NULL);
+}
 char *get_next_line(int fd)
 {
-	static t_list *list;
-	t_list *test;
+	static char *hold;
+	char *line;
 
-	list = NULL;
+	hold = NULL;
+
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	list = get_line(fd, &list);
 
-	// printf("%s\n",list->content);
+	line = get_line(fd, hold);
+	printf("%s\n" , line);
 
-	return ("otmane");
+	//line = check_newline(line);
+
+	// printf("%s\n" , line);
+
+	return line;
+
+
 }
 
 int main()
@@ -90,7 +100,9 @@ int main()
 
 
 	line = get_next_line(fd);
-	printf("%s\n", line);
+	// printf("%s\n", line);
+
+
 	// while (read(fd, buff, BUFFER_SIZE))
 	// {
 	// 	buff[BUFFER_SIZE] = '\0';
