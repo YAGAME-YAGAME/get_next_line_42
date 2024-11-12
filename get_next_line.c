@@ -13,124 +13,100 @@
 
 #include "get_next_line.h"
 
-char    *ft_substr(char const *s, unsigned int start, size_t len)
+t_list	*ft_lstnew(void *content)
 {
-        size_t  i;
-        char    *buff;
+	t_list	*new_node;
 
-        i = 0;
-        if (!s)
-                return (NULL);
-        if (start > ft_strlen(s))
-        {
-                len = 0;
-                start = 0;
-        }
-        else if (start + len > ft_strlen(s))
-                len = ft_strlen(s) - start;
-        buff = malloc(len + 1);
-        if (!buff)
-                return (NULL);
-        ft_strlcpy(buff, s + start, len + 1);
-        return (buff);
-}
-
-char *check_newline(char *hold)
-{
-	int i;
-	char *befor_newline;
-
-	i = 0;
-	if (!*hold)
+	new_node = malloc(sizeof(t_list));
+	if (!new_node)
 		return (NULL);
-	while (hold[i])
-	{
-		if (hold[i] == '\n')
-		{
-			i++;
-			befor_newline = ft_substr(hold, 0, i);
-			return (befor_newline);
-		}
-		i++;
-	}
-	return (hold);
+	new_node->content = content;
+	new_node->next = NULL;
+	return (new_node);
 }
 
-char *get_line(int fd, char *hold)
+void	ft_lstadd_back(t_list **lst, t_list *new)
 {
-	char buff[BUFFER_SIZE + 1];
-	int read_char;
+	t_list	*last;
 
-	read_char = 1;
-	while (read_char > 0)
+	if (!lst)
+		return ;
+	if (!*lst)
 	{
-		read_char = read(fd, buff, BUFFER_SIZE);
-		if (read_char < 0 )
+		*lst = new;
+		return ;
+	}
+	last = *lst;
+	while (last->next != NULL)
+		last = last->next;
+	last->next = new;
+}
+
+void get_line(int fd, t_list **list)
+{
+	char *buff;
+	t_list *new;
+	int rd;
+
+	rd = 1;
+	while(rd > 0)
+	{
+		buff = malloc(BUFFER_SIZE + 1);
+		if (!buff)
+			return ;
+		rd = read(fd , buff , BUFFER_SIZE);
+		if (rd <= 0)
 		{
-			free(hold);
-			hold = NULL;
-			return NULL;
+			free(*list);
+			*list = NULL;
+			return ;
 		}
-		buff[read_char] = '\0';
-		hold = ft_strjoin(hold, buff);
-		if (ft_strchr(hold, '\n'))
+		buff[rd] = '\0';
+		new = ft_lstnew(buff);
+		ft_lstadd_back(list, new);
+		if (ft_strchr(new->content, '\n'))
 			break;
 	}
-	return (hold);
+
 }
 
-char	*process_line(char **stash)
+char *after(t_list *list)
 {
-	int		i;
-	char	*line;
-	char	*current_stash;
+	int i;
 
 	i = 0;
-	current_stash = *stash;
-	if (stash && current_stash)
+	char *line;
+	while(list)
 	{
-		while (current_stash[i])
-		{
-			if (current_stash[i] == '\n')
-				return (ft_substr(current_stash, 0, i + 1));
-			i++;
-		}
-		if (current_stash[i] == '\0')
-		{
-			line = ft_substr(current_stash, 0, i);
-			free(current_stash);
-			*stash = NULL;
-			return (line);
-		}
-	}
-	return (NULL);
-}
 
+		if (ft_strchr(list->content, '\n'))
+		{
+
+		}
+		i++;
+
+	}
+}
 
 char *get_next_line(int fd)
 {
-	static char *hold;
+	static t_list *hold;
 	char *line;
 
 	hold = NULL;
-
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
+	get_line(fd, &hold);
 
-	hold = get_line(fd, hold);
-	if (!hold)
-		return (NULL);
+	line = after(hold);
+	// while (hold)
+	// {
+	// 	printf("%s\n", hold->content);
+	// 	hold = hold->next;
+	// }
 
-	line = check_newline(hold);
-	if (!line)
-	{
-		free(hold);
-		hold = NULL;
-		return NULL;
-	}
 
-	hold = process_line(&hold);
-	return line;
+	return (line);
 }
 
 int main()
@@ -139,20 +115,9 @@ int main()
 	char *line;
 
 	fd = open("test.txt" , O_RDONLY);
+	line = get_next_line(fd);
+	printf("%s\n", line);
 
-
-	// line = get_next_line(fd);
-
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-
-
-	// while (read(fd, buff, BUFFER_SIZE))
-	// {
-	// 	buff[BUFFER_SIZE] = '\0';
-	// 	printf("%s\n", buff);
-	// }
 
 	close(fd);
 }
