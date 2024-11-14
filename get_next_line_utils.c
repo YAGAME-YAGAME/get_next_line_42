@@ -6,7 +6,7 @@
 /*   By: otzarwal <otzarwal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 16:01:16 by otzarwal          #+#    #+#             */
-/*   Updated: 2024/11/11 17:55:20 by otzarwal         ###   ########.fr       */
+/*   Updated: 2024/11/14 12:49:42 by otzarwal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,19 @@ char	*ft_strdup(const char *s1)
 {
 	char	*buff;
 	size_t	size;
+	int i;
 
+	i = 0;
 	size = ft_strlen(s1);
 	buff = malloc(size + 1);
 	if (!buff)
 		return (NULL);
-	ft_strlcpy(buff, s1, size + 1);
+	while (s1[i])
+	{
+		buff[i] = s1[i];
+		i++;
+	}
+	buff[i] = '\0';
 	return (buff);
 }
 
@@ -72,44 +79,31 @@ int ft_strchr(char *s, char c)
 	}
 	return (0);
 }
-// size_t	ft_strlcat(char *dst, const char *src, size_t size)
-// {
-// 	size_t	dlen;
-// 	size_t	slen;
-// 	size_t	i;
-
-// 	slen = ft_strlen(src);
-// 	if (size == 0 && !dst)
-// 		return (slen);
-// 	dlen = ft_strlen(dst);
-// 	i = 0;
-// 	if (size <= dlen)
-// 		return (size + slen);
-// 	while (i < size - dlen - 1 && src[i])
-// 	{
-// 		dst[dlen + i] = src[i];
-// 		i++;
-// 	}
-// 	dst[dlen + i] = '\0';
-// 	return (dlen + slen);
-// }
-
-size_t	ft_strlcpy(char *dst, const char *src, size_t size)
+char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	size_t	i;
+	char	*buff;
 
 	i = 0;
-	if (size == 0)
-		return (ft_strlen(src));
-	while (src[i] && i < size - 1)
+	if (!s)
+		return (NULL);
+	if (start > ft_strlen(s))
 	{
-		dst[i] = src[i];
+		len = 0;
+		start = 0;
+	}
+	else if (start + len > ft_strlen(s))
+		len = ft_strlen(s) - start;
+	buff = malloc(len + 1);
+	if (!buff)
+		return (NULL);
+	while (s[i] && i < len)
+	{
+		buff[i] = s[i];
 		i++;
 	}
-	dst[i] = '\0';
-	while (src[i])
-		i++;
-	return (i);
+	buff[i] = '\0';
+	return (buff);
 }
 
 

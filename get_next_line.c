@@ -13,101 +13,66 @@
 
 #include "get_next_line.h"
 
-t_list	*ft_lstnew(void *content)
+char *after_newline(char *line)
 {
-	t_list	*new_node;
+	int i;
+	char *res;
 
-	new_node = malloc(sizeof(t_list));
-	if (!new_node)
-		return (NULL);
-	new_node->content = content;
-	new_node->next = NULL;
-	return (new_node);
-}
-
-void	ft_lstadd_back(t_list **lst, t_list *new)
-{
-	t_list	*last;
-
-	if (!lst)
-		return ;
-	if (!*lst)
+	i = 0;
+	while (line[i])
 	{
-		*lst = new;
-		return ;
+		if (line[i] == '\n')
+		{
+			i++;
+			res = ft_substr(line, 0, i);
+			break;
+		}
+		i++;
 	}
-	last = *lst;
-	while (last->next != NULL)
-		last = last->next;
-	last->next = new;
+	return (res);
 }
 
-void get_line(int fd, t_list **list)
+void get_line(int fd, char **hold)
 {
 	char *buff;
-	t_list *new;
 	int rd;
+	char *res;
 
-	rd = 1;
+	rd  = 1;
 	while(rd > 0)
 	{
 		buff = malloc(BUFFER_SIZE + 1);
 		if (!buff)
 			return ;
-		rd = read(fd , buff , BUFFER_SIZE);
+		rd = read(fd, buff, BUFFER_SIZE);
 		if (rd <= 0)
 		{
-			free(*list);
-			*list = NULL;
+			free(hold);
+			hold = NULL;
 			return ;
 		}
-		buff[rd] = '\0';
-		new = ft_lstnew(buff);
-		ft_lstadd_back(list, new);
-		if (ft_strchr(new->content, '\n'))
+		*hold = ft_strjoin(*hold, buff);
+		if (ft_strchr(*hold, '\n'))
 			break;
-	}
-
-}
-
-char *after(t_list *list)
-{
-	int i;
-
-	i = 0;
-	char *line;
-	while(list)
-	{
-
-		if (ft_strchr(list->content, '\n'))
-		{
-
-		}
-		i++;
-
 	}
 }
 
 char *get_next_line(int fd)
 {
-	static t_list *hold;
+	static char *hold;
 	char *line;
 
-	hold = NULL;
-	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
 	get_line(fd, &hold);
 
-	line = after(hold);
-	// while (hold)
-	// {
-	// 	printf("%s\n", hold->content);
-	// 	hold = hold->next;
-	// }
+	line = after_newline(hold);
+	printf("%s", line);
 
 
+	hold = NULL;
 	return (line);
 }
+
+
 
 int main()
 {
@@ -115,8 +80,10 @@ int main()
 	char *line;
 
 	fd = open("test.txt" , O_RDONLY);
-	line = get_next_line(fd);
-	printf("%s\n", line);
+
+	get_next_line(fd);
+	get_next_line(fd);
+
 
 
 	close(fd);
