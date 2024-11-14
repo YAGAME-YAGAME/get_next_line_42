@@ -6,7 +6,7 @@
 /*   By: otzarwal <otzarwal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 16:01:16 by otzarwal          #+#    #+#             */
-/*   Updated: 2024/11/14 12:49:42 by otzarwal         ###   ########.fr       */
+/*   Updated: 2024/11/14 18:24:20 by otzarwal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,13 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	int i;
 
 	i = 0;
+	if (!s1 && !s2)
+		return (NULL);
 	if (!s1 && s2)
 		return (ft_strdup(s2));
 	if (s1 && !s2)
 		return (ft_strdup(s1));
-	if (!s1 && !s2)
-		return (NULL);
+
 	size = ft_strlen(s1) + ft_strlen(s2) + 1;
 	buff = malloc(size);
 	if (!buff)
@@ -97,9 +98,9 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	buff = malloc(len + 1);
 	if (!buff)
 		return (NULL);
-	while (s[i] && i < len)
+	while (s[start + i] && i < len)
 	{
-		buff[i] = s[i];
+		buff[i] = s[start + i];
 		i++;
 	}
 	buff[i] = '\0';

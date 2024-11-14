@@ -6,14 +6,14 @@
 /*   By: otzarwal <otzarwal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 15:12:34 by otzarwal          #+#    #+#             */
-/*   Updated: 2024/11/12 16:16:16 by otzarwal         ###   ########.fr       */
+/*   Updated: 2024/11/14 19:23:22 by otzarwal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 #define GET_NEXT_LINE_H
 
-#define BUFFER_SIZE 50
+#define BUFFER_SIZE 100
 
 typedef struct s_list{
 	char *content;
