@@ -6,33 +6,30 @@
 /*   By: otzarwal <otzarwal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 15:12:34 by otzarwal          #+#    #+#             */
-/*   Updated: 2024/11/14 19:23:22 by otzarwal         ###   ########.fr       */
+/*   Updated: 2024/11/16 17:03:28 by otzarwal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 #define GET_NEXT_LINE_H
 
-#define BUFFER_SIZE 100
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 10
+# endif
 
-typedef struct s_list{
-	char *content;
-	struct s_list *next;
-}	t_list;
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
+#include <stdio.h>
 #include <unistd.h>
 
+char	*get_next_line(int fd);
 
 int ft_strchr(char *s, char c);
 char	*ft_strdup(const char *s1);
 size_t	ft_strlen(const char *s);
-size_t	ft_strlcpy(char *dst, const char *src, size_t size);
-char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_strjoin(char *s1, char *s2);
 char    *ft_substr(char const *s, unsigned int start, size_t len);
-// size_t	ft_strlcat(char *dst, const char *src, size_t size);
 
 
 #endif
