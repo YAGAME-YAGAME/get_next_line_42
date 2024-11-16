@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: otzarwal <otzarwal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 16:01:16 by otzarwal          #+#    #+#             */
-/*   Updated: 2024/11/16 21:45:49 by otzarwal         ###   ########.fr       */
+/*   Updated: 2024/11/16 21:45:42 by otzarwal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*ft_strdup(const char *s1)
 {
@@ -83,17 +83,13 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 	if (!s)
 		return (NULL);
 	if (start >= ft_strlen(s))
-	{
-		len = 0;
-		start = 0;
 		return (NULL);
-	}
-	if (start + len > ft_strlen(s))
+	else if (len > ft_strlen(s) - start)
 		len = ft_strlen(s) - start;
 	buff = malloc(len + 1);
 	if (!buff)
 		return (NULL);
-	while (s[start + i] && i < len)
+	while (i < len)
 	{
 		buff[i] = s[start + i];
 		i++;

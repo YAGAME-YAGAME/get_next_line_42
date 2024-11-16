@@ -1,16 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: otzarwal <otzarwal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 10:41:12 by otzarwal          #+#    #+#             */
-/*   Updated: 2024/11/16 21:35:07 by otzarwal         ###   ########.fr       */
+/*   Updated: 2024/11/16 21:36:29 by otzarwal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
+#include <limits.h>
 
 char	*resit(char *hold)
 {
@@ -86,22 +87,22 @@ static char	*get_line(int fd, char *hold)
 
 char	*get_next_line(int fd)
 {
-	static char	*hold = NULL;
+	static char	*hold[OPEN_MAX];
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	hold = get_line(fd, hold);
-	if (!hold)
+	hold[fd] = get_line(fd, hold[fd]);
+	if (!hold[fd])
 		return (NULL);
-	line = befor_newline(&hold);
+	line = befor_newline(&hold[fd]);
 	if (!line)
 	{
-		free(hold);
-		hold = NULL;
+		free(hold[fd]);
+		hold[fd] = NULL;
 		return (NULL);
 	}
-	hold = resit(hold);
+	hold[fd] = resit(hold[fd]);
 	return (line);
 }
 
